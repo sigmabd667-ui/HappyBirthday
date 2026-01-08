@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Joylim</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0fafa;
+            --gallery-bg: #fff5f7; 
+            --accent-cyan: rgba(5, 230, 230, 0.6);
+            --text-main: #000000;
+            --gold: #c5a059;
+            --primary-pink: #e47c8d;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* --- MOBILE ADJUSTMENT --- */
+        @media (max-width: 768px) {
+            .title { font-size: 4rem !important; }
+            .timer-container { gap: 10px !important; font-size: 0.8rem !important; }
+            .message-card { padding: 30px !important; }
+            .gallery-grid { grid-template-columns: 1fr !important; }
+        }
+
+        .bokeh-bg {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, var(--accent-cyan) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(5, 230, 230, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.9) 0%, transparent 50%);
+            filter: blur(80px);
+            z-index: -2;
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .main-container {
+            text-align: center;
+            z-index: 10;
+            max-width: 800px;
+            padding: 20px;
+            pointer-events: none;
+        }
+
+        .main-container * { pointer-events: auto; }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            color: var(--text-main);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            letter-spacing: -2px;
+            filter: drop-shadow(0 4px 10px rgba(5, 230, 230, 0.2));
+        }
+
+        /* --- LIVE TIMER STYLES --- */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            color: #4a6a6a;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        .timer-item span {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-pink);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .badge {
+            background: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(5, 230, 230, 0.15);
+            margin-bottom: 2rem;
+        }
+
+        .badge .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .tagline {
+            color: #2c4a4a;
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .gallery-section {
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            background-color: var(--gallery-bg);
+            border-top: 1px solid rgba(214, 109, 129, 0.1);
+        }
+
+        .gallery-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .gallery-title span { color: var(--gold); }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 50px auto 0;
+        }
+
+        .gallery-item {
+            background: white;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(214, 109, 129, 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+        }
+
+        .gallery-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .surprise-section {
+            padding: 100px 20px;
+            text-align: center;
+            background-color: #fffafb;
+            position: relative;
+            z-index: 10;
+        }
+
+        .surprise-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+        }
+
+        .surprise-title span { color: var(--primary-pink); }
+
+        .video-btn {
+            background: linear-gradient(to right, #e47c8d, #f6b1bc);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(228, 124, 141, 0.3);
+            transition: all 0.3s ease;
+            margin: 15px auto;
+            cursor: pointer;
+            border: none;
+        }
+
+        .message-card {
+            background: white;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 65px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+            text-align: left;
+            line-height: 2;
+            color: #555;
+            font-size: 1.2rem;
+        }
+
+        /* Modal Styles */
+        #videoModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        /* --- CROSS BUTTON --- */
+        .close-modal {
+            position: absolute;
+            top: -45px;
+            right: 0;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #wish { width: 100%; border-radius: 15px; }
+
+        /* --- RISING BUBBLES --- */
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+            animation: rise linear infinite;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-120vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bokeh-bg"></div>
+
+    <div id="videoModal">
+        <div class="modal-container">
+            <button class="close-modal" onclick="closeVideo()">&times;</button>
+            <video id="wish" controls>
+                <source src="wish.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <div class="hero-section" id="hero">
+        <div class="main-container">
+            <p class="text-teal-600 text-sm mb-4 tracking-[0.2em] font-bold uppercase">✨ Happy Birthday ✨</p>
+            <h1 class="title">Joylim</h1>
+            <br>
+            <div id="timer" class="timer-container">
+                <div class="timer-item"><span id="yrs">0</span>Years</div>
+                <div class="timer-item"><span id="days">0</span>Days</div>
+                <div class="timer-item"><span id="hrs">0</span>Hours</div>
+                <div class="timer-item"><span id="mins">0</span>Mins</div>
+                <div class="timer-item"><span id="secs">0</span>Secs</div>
+            </div>
+
+            <div class="badge">
+                <span class="number">20</span>
+                <span class="text" style="color:#334e4e; font-size: 0.8rem; line-height: 1.1; text-align: left;">years of<br><strong>Pure Joy</strong></span>
+            </div>
+            <p class="tagline">Celebrating the beautiful soul that lights up everyone's life</p>
+            <a href="#moments" class="flex flex-col items-center gap-2 opacity-70 uppercase tracking-widest text-[10px] no-underline color-inherit">
+                <span>Scroll to explore</span>
+                <span class="animate-bounce">↓</span>
+            </a>
+        </div>
+    </div>
+
+    <div id="moments" class="gallery-section">
+        <h2 class="gallery-title">Beautiful <span>Moments</span></h2>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="img1.jpeg" alt="Moment 1"></div>
+            <div class="gallery-item"><img src="img2.jpeg" alt="Moment 2"></div>
+            <div class="gallery-item"><img src="img3.jpeg" alt="Moment 3"></div>
+            <div class="gallery-item"><img src="img4.jpeg" alt="Moment 4"></div>
+        </div>
+    </div>
+
+    <div class="surprise-section">
+        <h2 class="surprise-title">A Special <span>Surprise</span></h2>
+        <button onclick="openVideo()" class="video-btn flex items-center gap-2">
+            <span>▶</span> Play Video Message
+        </button>
+        <a href="https://youtu.be/LeVy4oa6AWg?si=YmoE8YMWbPMUvCP4" target="_blank" style="text-decoration:none;">
+            <button class="video-btn flex items-center gap-2"> Watch More Wishes at YouTube</button>
+        </a>
+    </div>
+
+    <div class="gallery-section">
+        <div class="text-rose-500 text-2xl mb-4">❤️</div>
+        <h2 class="text-4xl font-serif font-bold mb-12">A Message for <span class="text-[#c5a059]">You</span></h2>
+        <div class="message-card">
+            <p>Yayyy 12 bajyoo</p>
+            <p>You came to this world 😭</p>
+            <p>Happy Birthday Lurrii 🤪 🫶🏻</p>
+            <p>Aaj hi k din aap aaye the na rote huwe mujhe hasane k liye 🤪 😭 🫶🏻</p>
+            <p>God will blesses you with lots of happiness and joy throughout yr life 🤩</p>
+            <p>Sadhai sadhai be happy and eat healthy food, studyy hardd, don't skip meals 🧘🏼‍♀️.</p>
+            <p>Eagerrrrrlyy waiting to see you sooon 90 days to goo</p>
+            <p>Keep talking don't be silent la ☹️</p>
+            <p>Arruuu ta vannu ta dherai nei xa tara bolnei aawdena 🥹.</p>
+            <p>Enjoy yr dayy.</p>
+            <p>Kasto lagyoo bhannu la</p>
+            <p>Goodd nighttt 🥳 🤩.</p>
+        </div>
+    </div>
+
+    <script>
+        // LIVE TIMER LOGIC
+        function updateTimer() {
+            const birth = new Date('January 9, 2006 00:00:00').getTime();
+            const now = new Date().getTime();
+            const diff = now - birth;
+
+            const yrs = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+            const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('yrs').innerText = yrs;
+            document.getElementById('days').innerText = days;
+            document.getElementById('hrs').innerText = hrs;
+            document.getElementById('mins').innerText = mins;
+            document.getElementById('secs').innerText = secs;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // RISING BUBBLES LOGIC
+        const hero = document.getElementById('hero');
+        function createBubble() {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            const size = Math.random() * 30 + 10 + 'px';
+            b.style.width = size;
+            b.style.height = size;
+            b.style.left = Math.random() * 100 + 'vw';
+            b.style.animationDuration = Math.random() * 3 + 5 + 's';
+            hero.appendChild(b);
+            setTimeout(() => b.remove(), 8000);
+        }
+        // Increased frequency by 50% (500ms to 333ms)
+        setInterval(createBubble, 333);
+
+        // MODAL CONTROLS
+        const modal = document.getElementById('videoModal');
+        const video = document.getElementById('wish');
+        function openVideo() { modal.style.display = 'flex'; video.play(); }
+        function closeVideo() { modal.style.display = 'none'; video.pause(); video.currentTime = 0; }
+        window.onclick = (e) => { if (e.target == modal) closeVideo(); }
+    </script>
+</body>
+</html>
